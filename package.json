@@ -1,0 +1,17 @@
+{
+    "name": "scientific-figure-generator",
+    "version": "1.0.0",
+    "description": "Interactive scientific figure generator with Tailwind CSS and precompiled JSX",
+    "scripts": {
+      "build:css": "npx tailwindcss -i ./src/input.css -o ./styles.css --minify",
+      "watch:css": "npx tailwindcss -i ./src/input.css -o ./styles.css --watch",
+      "build:js": "npx babel src/app.jsx --out-file scripts/app.js --presets=@babel/preset-react",
+      "watch:js": "npx babel src/app.jsx --out-file scripts/app.js --presets=@babel/preset-react --watch",
+      "build": "npm run build:css && npm run build:js"
+    },
+    "devDependencies": {
+      "@babel/cli": "^7.22.9",
+      "@babel/preset-react": "^7.22.9",
+      "tailwindcss": "^3.4.1"
+    }
+  }

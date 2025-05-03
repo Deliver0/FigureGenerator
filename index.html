@@ -4,16 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Interactive Scientific Figure Generator</title>
-  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.22.9/babel.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.2.0",
+        "react-dom": "https://esm.sh/react-dom@18.2.0/client"
+      }
+    }
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.9/babel.min.js"></script>
 </head>
 <body>
   <div id="root"></div>
-  <script type="text/babel">
-    const { useState, useEffect, useRef } = React;
+  <script type="text/babel" data-type="module">
+    import React, { useState, useEffect, useRef } from 'react';
+    import { createRoot } from 'react-dom';
 
     const App = () => {
       const [image, setImage] = useState(null);
@@ -151,8 +158,12 @@
 
       // Initialize p5.js
       useEffect(() => {
-        const p5Instance = new p5(sketch, document.getElementById('canvas-container'));
-        return () => p5Instance.remove();
+        try {
+          const p5Instance = new p5(sketch, document.getElementById('canvas-container'));
+          return () => p5Instance.remove();
+        } catch (err) {
+          console.error('p5.js initialization failed:', err);
+        }
       }, [image, roi, zoom, comparisons]);
 
       return (
@@ -243,9 +254,13 @@
       );
     };
 
-    // Use createRoot instead of ReactDOM.render
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
+    // Render the app with error handling
+    try {
+      const root = createRoot(document.getElementById('root'));
+      root.render(<App />);
+    } catch (err) {
+      console.error('Failed to render React app:', err);
+    }
   </script>
 </body>
 </html>
